@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Header from "./Header"
-import Player from "./Player"
-import AddPlayerForm from './AddPlayerForm'
+import Header from './Header';
+import Player from './Player';
+import AddPlayerForm from './AddPlayerForm';
 
 class App extends Component {
   state = {
@@ -29,12 +29,40 @@ class App extends Component {
     ]
   };
 
-  handleScoreChange = (index, delta) => {
-    this.setState( prevState => ({
-        score: prevState.players[index].score += delta 
-    }));
+  // player id counter
+  prevPlayerId = 4;
 
-}
+  handleScoreChange = (index, delta) => {
+    this.setState( prevState => {
+      // New 'players' array – a copy of the previous `players` state
+      const updatedPlayers = [ ...prevState.players ];
+      // A copy of the player object we're targeting
+      const updatedPlayer = { ...updatedPlayers[index] };
+
+      // Update the target player's score
+      updatedPlayer.score += delta;
+      // Update the 'players' array with the target player's latest score
+      updatedPlayers[index] = updatedPlayer;
+
+      // Update the `players` state without mutating the original state
+      return {
+        players: updatedPlayers
+      };
+    });
+  }
+
+  handleAddPlayer = (name) => {
+    this.setState({
+      players: [
+        ...this.state.players,
+        {
+          name,
+          score: 0,
+          id: this.prevPlayerId += 1
+        }
+      ]
+    });
+  }
 
   handleRemovePlayer = (id) => {
     this.setState( prevState => {
@@ -64,11 +92,13 @@ class App extends Component {
             removePlayer={this.handleRemovePlayer}           
           />
         )}
-        <AddPlayerForm />
+
+        <AddPlayerForm addPlayer={this.handleAddPlayer} />
       </div>
     );
   }
 }
 
 export default App;
+
 
