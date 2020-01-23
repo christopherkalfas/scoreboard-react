@@ -1,25 +1,34 @@
 import React from 'react'
+import { Consumer } from './Context'
 
-const AddPlayerForm = ({ addPlayer}) => {
-    let playerInput = React.createRef()
-    let handleSubmit = (e) => {
-        e.preventDefault()
-        addPlayer(playerInput.current.value)
-        e.currentTarget.reset()
-    }
+const AddPlayerForm = () => {
+    const playerInput = React.createRef()
         return (
-            <form onSubmit={handleSubmit}>
-                <input
-                    type='text'
-                    ref={playerInput}
-                    placeholder="Enter a Player Name"
-                />
-                <input
-                    type='submit'
-                    value="Add Player"
+            <Consumer>
+                { ({ actions }) => {
                     
-                /> 
-            </form>
+                    const handleSubmit = (e) => {
+                        e.preventDefault()
+                        actions.addPlayer(playerInput.current.value)
+                        e.currentTarget.reset()
+                    }
+
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                type='text'
+                                ref={playerInput}
+                                placeholder="Enter a Player Name"
+                            />
+                            <input
+                            type='submit'
+                            value="Add Player" 
+                            /> 
+                        </form>
+                    )
+                }}
+            </Consumer>
+            
         )
 }
 
